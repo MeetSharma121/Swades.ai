@@ -1,9 +1,9 @@
+import type { NextConfig } from "next";
 import path from "node:path";
 
 const monorepoRoot = path.resolve(process.cwd(), "../..");
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   turbopack: {
     root: monorepoRoot,
   },
