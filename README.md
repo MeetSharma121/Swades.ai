@@ -40,29 +40,94 @@
 
 ---
 
-## 🏁 Get started (fast path)
+## 🏁 Run on your machine
+
+### Prerequisites
+
+- **[Bun](https://bun.sh)** — `bun --version` should work.
+- **PostgreSQL** — running locally or reachable from your machine.
+- **Anthropic API key** — for real LLM runs (`ANTHROPIC_API_KEY`).
+
+### Clone and install
 
 ```bash
-# 1️⃣ Install deps
+git clone https://github.com/MeetSharma121/Swades.ai.git
+cd Swades.ai
 bun install
+```
 
-# 2️⃣ Env (copy and edit — never commit real keys!)
+### Database
+
+Create a database (name can match `DATABASE_URL`; example: `healosbench`):
+
+```bash
+createdb healosbench
+# or in psql: CREATE DATABASE healosbench;
+```
+
+### Environment
+
+```bash
 cp apps/server/.env.example apps/server/.env
+```
 
-# 3️⃣ Database schema
-bun run db:push
+Edit `apps/server/.env`:
 
-# 4️⃣ Web + API together
+- `ANTHROPIC_API_KEY` — your key (never commit this file).
+- `DATABASE_URL` — e.g. `postgres://postgres:postgres@localhost:5432/healosbench`
+- `PORT` — optional; default **8787**
+
+### Apply schema (`db:push`)
+
+`db:push` runs from the **repo root** and needs `DATABASE_URL` in the environment. Easiest on **bash/zsh**:
+
+```bash
+set -a && source apps/server/.env && set +a && bun run db:push
+```
+
+**fish** (no `source`):
+
+```bash
+bun --env-file=apps/server/.env run packages/db/src/push.ts
+```
+
+### Dev: API + dashboard
+
+```bash
 bun run dev
 ```
 
-**In a second terminal** — kick off an eval (Haiku is the sweet spot for cost vs signal):
+Then open:
+
+- Dashboard: http://localhost:3000  
+- API health: http://localhost:8787/health  
+- Runs API: http://localhost:8787/api/v1/runs  
+
+If Turbo doesn’t start both apps, run `bun run dev` in `apps/server` and `apps/web` in two terminals.
+
+### CLI eval (needs server running)
+
+The CLI **POSTs to** `http://localhost:8787`, so keep the server up. In another terminal:
 
 ```bash
 bun run eval -- --strategy=zero_shot --model=claude-haiku-4-5-20251001
 ```
 
-Want more flavor? Try `few_shot` or `cot` instead of `zero_shot`. 🎨
+Swap `zero_shot` for `few_shot` or `cot` if you like.
+
+### Tests
+
+```bash
+bun test
+```
+
+### Common issues
+
+| Symptom | Fix |
+|--------|-----|
+| `DATABASE_URL is required` on `db:push` | Load env before `bun run db:push` (see above). |
+| Eval hangs / connection errors | Start the server; default port is **8787**. |
+| No LLM calls / auth errors | Set `ANTHROPIC_API_KEY` in `apps/server/.env` and restart the server. |
 
 ---
 
