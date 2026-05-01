@@ -66,16 +66,75 @@ Want more flavor? Try `few_shot` or `cot` instead of `zero_shot`. 🎨
 
 ---
 
-## 🧱 Repo layout (bird’s-eye)
+## 📂 File structure
 
 ```
-apps/server   →  Hono API, eval runner, extraction + scoring
-apps/web      →  Next.js dashboard (runs, detail, compare)
-packages/llm  →  Anthropic client, prompts, tool schema, retries
-packages/db   →  Postgres helpers + migrations bootstrap
-packages/shared → Types shared across server + web
-data/         →  Synthetic transcripts, gold JSON, schema.json
-tests/        →  The stuff that actually breaks (retries, F1, resume, etc.)
+healosbench/
+├── NOTES.md                              ← Architecture notes + methodology (START HERE) 📖
+├── README.md                             ← You are here
+├── package.json                          ← Bun workspaces + root scripts (`dev`, `eval`, `db:push`, …)
+├── turbo.json
+├── tsconfig.json
+├── .gitignore
+│
+├── data/
+│   ├── transcripts/case_001.txt–case_050.txt   ← Synthetic doctor–patient chats
+│   ├── gold/case_001.json–case_050.json        ← Ground-truth extractions
+│   └── schema.json                             ← JSON Schema all outputs must satisfy
+│
+├── packages/
+│   ├── shared/src/
+│   │   ├── index.ts                      ← Re-exports
+│   │   └── types.ts                      ← Shared types (runs, extractions, traces)
+│   │
+│   ├── llm/src/
+│   │   ├── client.ts                     ← Anthropic tool use + retry loop + cache token fields
+│   │   ├── prompts.ts                    ← Strategies: zero_shot / few_shot / cot + prompt hash
+│   │   └── index.ts
+│   │
+│   ├── db/src/
+│   │   ├── client.ts                     ← Postgres: runs, run_cases, extraction_cache + migrate
+│   │   ├── push.ts                       ← `bun run db:push` entry
+│   │   └── index.ts
+│   │
+│   └── env/src/
+│       └── index.ts                      ← Typed env loading (zod)
+│
+├── apps/
+│   ├── server/
+│   │   ├── .env.example                  ← ANTHROPIC_API_KEY, DATABASE_URL, PORT
+│   │   ├── package.json
+│   │   └── src/
+│   │       ├── index.ts                  ← Hono server, CORS, `/health`
+│   │       ├── routes/
+│   │       │   └── runs.route.ts       ← `/api/v1/runs` + SSE stream + resume
+│   │       ├── lib/
+│   │       │   └── text.ts             ← Normalization + fuzzy / token-set helpers
+│   │       └── services/
+│   │           ├── extract.service.ts    ← Calls LLM package + schema validation hook
+│   │           ├── evaluate.service.ts   ← Per-field metrics, F1, hallucination checks
+│   │           ├── runner.service.ts     ← Concurrency, backoff, resumability, idempotency cache
+│   │           ├── dataset.service.ts    ← Loads transcripts + gold from `data/`
+│   │           └── schema.service.ts     ← Ajv validation against `data/schema.json`
+│   │
+│   └── web/                              ← Next.js dashboard (runs, detail, compare)
+│       ├── next.config.ts
+│       ├── next-env.d.ts
+│       ├── package.json
+│       └── src/app/
+│           ├── layout.tsx
+│           ├── globals.css
+│           ├── page.tsx                  ← Runs list
+│           ├── compare/page.tsx          ← Side-by-side run deltas + winner
+│           └── runs/[id]/page.tsx      ← Per-case scores + gold vs pred + LLM traces
+│
+├── scripts/
+│   └── eval.ts                           ← CLI eval → POST run, poll until complete, summary table
+│
+├── tests/
+│   └── eval.test.ts                      ← Retry path, fuzzy meds, set-F1, hallucination ±, resume keys, backoff, hash
+│
+└── results/                              ← Optional: paste CLI / multi-strategy outputs for submission
 ```
 
 ---
