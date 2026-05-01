@@ -8,7 +8,16 @@ const create = await fetch(base, {
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ strategy, model })
 });
-const createBody = (await create.json()) as { id?: string; error?: string };
+const createText = await create.text();
+let createBody: { id?: string; error?: string } | undefined;
+try {
+  createBody = JSON.parse(createText) as { id?: string; error?: string };
+} catch {
+  console.error("Failed to parse create response as JSON.");
+  console.error("Status:", create.status);
+  console.error("Body:", createText);
+  process.exit(1);
+}
 if (!create.ok) {
   console.error("Failed to start run:", create.status, createBody);
   process.exit(1);
@@ -24,7 +33,8 @@ let done = false;
 while (!done) {
   await new Promise((r) => setTimeout(r, 1500));
   const r = await fetch(`${base}/${id}`);
-  const detail = (await r.json()) as {
+  const detailText = await r.text();
+  let detail: {
     run?: {
       status?: string;
       id?: string;
@@ -36,6 +46,14 @@ while (!done) {
     };
     cases?: unknown[];
   };
+  try {
+    detail = JSON.parse(detailText) as typeof detail;
+  } catch {
+    console.error("Failed to parse poll response as JSON.");
+    console.error("Status:", r.status);
+    console.error("Body:", detailText);
+    process.exit(1);
+  }
   if (!r.ok) {
     console.error("Poll failed:", r.status, detail);
     process.exit(1);
