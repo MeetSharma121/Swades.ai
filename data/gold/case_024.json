@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "cough",
+  "vitals": {
+    "bp": "114/79",
+    "hr": 89,
+    "temp_f": 98.6,
+    "spo2": 99
+  },
+  "medications": [
+    {
+      "name": "ibuprofen",
+      "dose": "200mg",
+      "frequency": "BID",
+      "route": "oral"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "low back strain",
+      "icd10": "S39.012A"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 25,
+    "reason": "symptom review"
+  }
+}

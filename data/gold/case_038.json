@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "cough",
+  "vitals": {
+    "bp": "128/78",
+    "hr": 78,
+    "temp_f": 98.6,
+    "spo2": 98
+  },
+  "medications": [
+    {
+      "name": "metformin",
+      "dose": "500mg",
+      "frequency": "BID",
+      "route": "oral"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "type 2 diabetes",
+      "icd10": "E11.9"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 9,
+    "reason": "symptom review"
+  }
+}

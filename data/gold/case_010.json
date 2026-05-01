@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "cough",
+  "vitals": {
+    "bp": "120/80",
+    "hr": 75,
+    "temp_f": 98.6,
+    "spo2": 95
+  },
+  "medications": [
+    {
+      "name": "metformin",
+      "dose": "500mg",
+      "frequency": "BID",
+      "route": "oral"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "hypertension",
+      "icd10": "I10"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 11,
+    "reason": "symptom review"
+  }
+}

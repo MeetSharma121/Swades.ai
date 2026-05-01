@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "chest pain",
+  "vitals": {
+    "bp": "112/77",
+    "hr": 87,
+    "temp_f": 98.2,
+    "spo2": 97
+  },
+  "medications": [
+    {
+      "name": "metformin",
+      "dose": "500mg",
+      "frequency": "BID",
+      "route": "oral"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "viral URI",
+      "icd10": "J06.9"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 23,
+    "reason": "symptom review"
+  }
+}

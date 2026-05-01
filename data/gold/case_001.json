@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "chest pain",
+  "vitals": {
+    "bp": "111/71",
+    "hr": 66,
+    "temp_f": 98.2,
+    "spo2": 96
+  },
+  "medications": [
+    {
+      "name": "lisinopril",
+      "dose": "10mg",
+      "frequency": "daily",
+      "route": "oral"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "migraine",
+      "icd10": "G43.909"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 2,
+    "reason": "symptom review"
+  }
+}

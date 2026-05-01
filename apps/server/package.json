@@ -1,0 +1,15 @@
+{
+  "name": "@healosbench/server",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "build": "bun build src/index.ts --outdir dist"
+  },
+  "dependencies": {
+    "@healosbench/db": "workspace:*",
+    "@healosbench/env": "workspace:*",
+    "@healosbench/llm": "workspace:*",
+    "@healosbench/shared": "workspace:*"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "fatigue",
+  "vitals": {
+    "bp": "126/71",
+    "hr": 81,
+    "temp_f": 98.4,
+    "spo2": 96
+  },
+  "medications": [
+    {
+      "name": "ibuprofen",
+      "dose": "200mg",
+      "frequency": "BID",
+      "route": "oral"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "migraine",
+      "icd10": "G43.909"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 17,
+    "reason": "symptom review"
+  }
+}

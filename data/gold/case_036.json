@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "chest pain",
+  "vitals": {
+    "bp": "126/76",
+    "hr": 76,
+    "temp_f": 98.2,
+    "spo2": 96
+  },
+  "medications": [
+    {
+      "name": "ibuprofen",
+      "dose": "200mg",
+      "frequency": "BID",
+      "route": "oral"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "migraine",
+      "icd10": "G43.909"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 7,
+    "reason": "symptom review"
+  }
+}

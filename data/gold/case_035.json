@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "headache",
+  "vitals": {
+    "bp": "125/75",
+    "hr": 75,
+    "temp_f": 98.0,
+    "spo2": 95
+  },
+  "medications": [
+    {
+      "name": "albuterol",
+      "dose": "2 puffs",
+      "frequency": "q4h prn",
+      "route": "inhaled"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "hypertension",
+      "icd10": "I10"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 6,
+    "reason": "symptom review"
+  }
+}

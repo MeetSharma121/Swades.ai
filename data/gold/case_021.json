@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "headache",
+  "vitals": {
+    "bp": "111/76",
+    "hr": 86,
+    "temp_f": 98.0,
+    "spo2": 96
+  },
+  "medications": [
+    {
+      "name": "lisinopril",
+      "dose": "10mg",
+      "frequency": "daily",
+      "route": "oral"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "migraine",
+      "icd10": "G43.909"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 22,
+    "reason": "symptom review"
+  }
+}

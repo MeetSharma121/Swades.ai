@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "chest pain",
+  "vitals": {
+    "bp": "113/83",
+    "hr": 83,
+    "temp_f": 98.2,
+    "spo2": 98
+  },
+  "medications": [
+    {
+      "name": "albuterol",
+      "dose": "2 puffs",
+      "frequency": "q4h prn",
+      "route": "inhaled"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "type 2 diabetes",
+      "icd10": "E11.9"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 14,
+    "reason": "symptom review"
+  }
+}

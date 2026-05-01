@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "headache",
+  "vitals": {
+    "bp": "117/77",
+    "hr": 72,
+    "temp_f": 98.0,
+    "spo2": 97
+  },
+  "medications": [
+    {
+      "name": "albuterol",
+      "dose": "2 puffs",
+      "frequency": "q4h prn",
+      "route": "inhaled"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "viral URI",
+      "icd10": "J06.9"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 8,
+    "reason": "symptom review"
+  }
+}

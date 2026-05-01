@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "back pain",
+  "vitals": {
+    "bp": "123/73",
+    "hr": 73,
+    "temp_f": 99.0,
+    "spo2": 98
+  },
+  "medications": [
+    {
+      "name": "lisinopril",
+      "dose": "10mg",
+      "frequency": "daily",
+      "route": "oral"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "type 2 diabetes",
+      "icd10": "E11.9"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 4,
+    "reason": "symptom review"
+  }
+}

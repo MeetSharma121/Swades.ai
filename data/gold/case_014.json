@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "headache",
+  "vitals": {
+    "bp": "124/84",
+    "hr": 79,
+    "temp_f": 98.0,
+    "spo2": 99
+  },
+  "medications": [
+    {
+      "name": "metformin",
+      "dose": "500mg",
+      "frequency": "BID",
+      "route": "oral"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "low back strain",
+      "icd10": "S39.012A"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 15,
+    "reason": "symptom review"
+  }
+}

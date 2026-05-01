@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "dizziness",
+  "vitals": {
+    "bp": "115/80",
+    "hr": 65,
+    "temp_f": 98.8,
+    "spo2": 95
+  },
+  "medications": [
+    {
+      "name": "lisinopril",
+      "dose": "10mg",
+      "frequency": "daily",
+      "route": "oral"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "hypertension",
+      "icd10": "I10"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 26,
+    "reason": "symptom review"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "dizziness",
+  "vitals": {
+    "bp": "129/79",
+    "hr": 79,
+    "temp_f": 98.8,
+    "spo2": 99
+  },
+  "medications": [
+    {
+      "name": "albuterol",
+      "dose": "2 puffs",
+      "frequency": "q4h prn",
+      "route": "inhaled"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "low back strain",
+      "icd10": "S39.012A"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 10,
+    "reason": "symptom review"
+  }
+}

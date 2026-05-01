@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "chest pain",
+  "vitals": {
+    "bp": "119/84",
+    "hr": 69,
+    "temp_f": 98.2,
+    "spo2": 99
+  },
+  "medications": [
+    {
+      "name": "lisinopril",
+      "dose": "10mg",
+      "frequency": "daily",
+      "route": "oral"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "low back strain",
+      "icd10": "S39.012A"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 30,
+    "reason": "symptom review"
+  }
+}

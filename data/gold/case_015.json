@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "chest pain",
+  "vitals": {
+    "bp": "125/70",
+    "hr": 80,
+    "temp_f": 98.2,
+    "spo2": 95
+  },
+  "medications": [
+    {
+      "name": "albuterol",
+      "dose": "2 puffs",
+      "frequency": "q4h prn",
+      "route": "inhaled"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "hypertension",
+      "icd10": "I10"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 16,
+    "reason": "symptom review"
+  }
+}

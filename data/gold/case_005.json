@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "back pain",
+  "vitals": {
+    "bp": "115/75",
+    "hr": 70,
+    "temp_f": 99.0,
+    "spo2": 95
+  },
+  "medications": [
+    {
+      "name": "lisinopril",
+      "dose": "10mg",
+      "frequency": "daily",
+      "route": "oral"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "hypertension",
+      "icd10": "I10"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 6,
+    "reason": "symptom review"
+  }
+}

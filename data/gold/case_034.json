@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "nausea",
+  "vitals": {
+    "bp": "124/74",
+    "hr": 74,
+    "temp_f": 99.2,
+    "spo2": 99
+  },
+  "medications": [
+    {
+      "name": "metformin",
+      "dose": "500mg",
+      "frequency": "BID",
+      "route": "oral"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "low back strain",
+      "icd10": "S39.012A"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 5,
+    "reason": "symptom review"
+  }
+}

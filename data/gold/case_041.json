@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "nausea",
+  "vitals": {
+    "bp": "111/81",
+    "hr": 81,
+    "temp_f": 99.2,
+    "spo2": 96
+  },
+  "medications": [
+    {
+      "name": "lisinopril",
+      "dose": "10mg",
+      "frequency": "daily",
+      "route": "oral"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "migraine",
+      "icd10": "G43.909"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 12,
+    "reason": "symptom review"
+  }
+}

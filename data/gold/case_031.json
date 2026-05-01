@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "cough",
+  "vitals": {
+    "bp": "121/71",
+    "hr": 71,
+    "temp_f": 98.6,
+    "spo2": 96
+  },
+  "medications": [
+    {
+      "name": "albuterol",
+      "dose": "2 puffs",
+      "frequency": "q4h prn",
+      "route": "inhaled"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "migraine",
+      "icd10": "G43.909"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 2,
+    "reason": "symptom review"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "chief_complaint": "nausea",
+  "vitals": {
+    "bp": "118/73",
+    "hr": 88,
+    "temp_f": 99.2,
+    "spo2": 98
+  },
+  "medications": [
+    {
+      "name": "ibuprofen",
+      "dose": "200mg",
+      "frequency": "BID",
+      "route": "oral"
+    }
+  ],
+  "diagnoses": [
+    {
+      "description": "type 2 diabetes",
+      "icd10": "E11.9"
+    }
+  ],
+  "plan": [
+    "rest",
+    "hydration",
+    "return precautions"
+  ],
+  "follow_up": {
+    "interval_days": 19,
+    "reason": "symptom review"
+  }
+}
