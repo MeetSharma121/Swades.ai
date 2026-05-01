@@ -126,6 +126,8 @@ bun test
 | Symptom | Fix |
 |--------|-----|
 | `DATABASE_URL is required` on `db:push` | Load env before `bun run db:push` (see above). |
+| `Could not find data/schema.json` (or ENOENT on `data/transcripts`) | Run commands from the **cloned repo** (with `data/`). Or set `HEALOSBENCH_ROOT=/absolute/path/to/repo` before starting the server. |
+| `ON CONFLICT` / SQL errors on `extraction_cache` | Pull latest; older SQL used invalid `on conflict do nothing` without a target. |
 | Eval hangs / connection errors | Start the server; default port is **8787**. |
 | No LLM calls / auth errors | Set `ANTHROPIC_API_KEY` in `apps/server/.env` and restart the server. |
 

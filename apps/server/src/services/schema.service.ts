@@ -2,10 +2,11 @@ import Ajv2020 from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { getRepoRoot } from "../lib/repo-root";
 
 const ajv = new Ajv2020({ allErrors: true, strict: false });
 addFormats(ajv);
-const schemaPath = path.resolve(process.cwd(), "data", "schema.json");
+const schemaPath = path.join(getRepoRoot(), "data", "schema.json");
 const schema = JSON.parse(readFileSync(schemaPath, "utf8"));
 const validateFn = ajv.compile(schema);
 

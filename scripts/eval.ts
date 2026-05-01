@@ -8,14 +8,42 @@ const create = await fetch(base, {
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ strategy, model })
 });
-const { id } = (await create.json()) as { id: string };
+const createBody = (await create.json()) as { id?: string; error?: string };
+if (!create.ok) {
+  console.error("Failed to start run:", create.status, createBody);
+  process.exit(1);
+}
+const id = createBody.id;
+if (!id) {
+  console.error("No run id in response:", createBody);
+  process.exit(1);
+}
 console.log(`run started: ${id}`);
 
 let done = false;
 while (!done) {
-  await Bun.sleep(1500);
+  await new Promise((r) => setTimeout(r, 1500));
   const r = await fetch(`${base}/${id}`);
-  const detail = await r.json();
+  const detail = (await r.json()) as {
+    run?: {
+      status?: string;
+      id?: string;
+      strategy?: string;
+      model?: string;
+      aggregate?: Record<string, number>;
+      duration_ms?: number;
+      cost_usd?: number;
+    };
+    cases?: unknown[];
+  };
+  if (!r.ok) {
+    console.error("Poll failed:", r.status, detail);
+    process.exit(1);
+  }
+  if (detail.run?.status === "failed") {
+    console.error("Run failed:", detail.run.aggregate);
+    process.exit(1);
+  }
   done = detail.run?.status === "completed";
   if (done) {
     console.log("\n=== Eval Summary ===");

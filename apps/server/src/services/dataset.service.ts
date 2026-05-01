@@ -1,6 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ExtractionSchema } from "@healosbench/shared";
+import { getRepoRoot } from "../lib/repo-root";
 
 export interface DatasetCase {
   transcriptId: string;
@@ -9,7 +10,7 @@ export interface DatasetCase {
 }
 
 export async function loadDataset(filter?: string[]): Promise<DatasetCase[]> {
-  const base = path.resolve(process.cwd(), "data");
+  const base = path.join(getRepoRoot(), "data");
   const txDir = path.join(base, "transcripts");
   const ids = (await readdir(txDir))
     .filter((f) => f.endsWith(".txt"))

@@ -67,94 +67,95 @@ async function executeRun(id: string, params: { strategy: Strategy; model: strin
   const sql = db();
   const startedAt = Date.now();
   await sql`update runs set status='running', updated_at=now() where id=${id}`;
-  const dataset = await loadDataset(params.dataset_filter);
+  try {
+    const dataset = await loadDataset(params.dataset_filter);
 
-  if (!resume) {
-    for (const c of dataset) {
-      await sql`
+    if (!resume) {
+      for (const c of dataset) {
+        await sql`
         insert into run_cases (id, run_id, transcript_id, status, gold)
         values (${randomUUID()}, ${id}, ${c.transcriptId}, 'pending', ${JSON.stringify(c.gold)}::jsonb)
         on conflict (run_id, transcript_id) do nothing
       `;
+      }
     }
-  }
 
-  const pending = await sql`select * from run_cases where run_id=${id} and status != 'completed'`;
-  let usage: TokenUsage = { input_tokens: 0, output_tokens: 0, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 };
-  let hallucinations = 0;
-  let schemaFailureCount = 0;
+    const pending = await sql`select * from run_cases where run_id=${id} and status != 'completed'`;
+    let usage: TokenUsage = { input_tokens: 0, output_tokens: 0, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 };
+    let hallucinations = 0;
+    let schemaFailureCount = 0;
 
-  await runLimited(pending, 5, async (row: any) => {
-    const sample = dataset.find((d) => d.transcriptId === row.transcript_id);
-    if (!sample) return;
-    const key = makeCacheKey(params.strategy, params.model, sample.transcriptId);
-    const [cached] = await sql`select * from extraction_cache where key=${key}`;
-    const begun = Date.now();
-    let output: any = null;
-    let attempts: any[] = [];
-    let promptHash = "";
-    if (cached) {
-      output = cached.prediction;
-      attempts = cached.attempts ?? [];
-      promptHash = cached.prompt_hash;
-    } else {
-      const extract = await withBackoff(() =>
-        extractService({
-          transcript: sample.transcript,
-          transcriptId: sample.transcriptId,
-          strategy: params.strategy,
-          model: params.model
-        })
-      );
-      output = extract.output;
-      attempts = extract.attempts;
-      promptHash = extract.promptHash;
+    await runLimited(pending, 5, async (row: any) => {
+      const sample = dataset.find((d) => d.transcriptId === row.transcript_id);
+      if (!sample) return;
+      const key = makeCacheKey(params.strategy, params.model, sample.transcriptId);
+      const [cached] = await sql`select * from extraction_cache where key=${key}`;
+      const begun = Date.now();
+      let output: any = null;
+      let attempts: any[] = [];
+      let promptHash = "";
+      if (cached) {
+        output = cached.prediction;
+        attempts = cached.attempts ?? [];
+        promptHash = cached.prompt_hash;
+      } else {
+        const extract = await withBackoff(() =>
+          extractService({
+            transcript: sample.transcript,
+            transcriptId: sample.transcriptId,
+            strategy: params.strategy,
+            model: params.model
+          })
+        );
+        output = extract.output;
+        attempts = extract.attempts;
+        promptHash = extract.promptHash;
+        await sql`
+          insert into extraction_cache (key, transcript_id, strategy, model, prediction, attempts, prompt_hash)
+          values (${key}, ${sample.transcriptId}, ${params.strategy}, ${params.model}, ${JSON.stringify(output)}::jsonb, ${JSON.stringify(
+            attempts
+          )}::jsonb, ${promptHash})
+          on conflict (key) do nothing
+        `;
+      }
+
+      const scores = evaluateCase(output, sample.gold);
+      const halluc = findHallucinations(output, sample.transcript);
+      const schemaFailed = output === null;
+      hallucinations += halluc.length;
+      if (schemaFailed) schemaFailureCount++;
+      for (const a of attempts) {
+        usage.input_tokens += a.usage?.input_tokens ?? 0;
+        usage.output_tokens += a.usage?.output_tokens ?? 0;
+        usage.cache_read_input_tokens += a.usage?.cache_read_input_tokens ?? 0;
+        usage.cache_creation_input_tokens += a.usage?.cache_creation_input_tokens ?? 0;
+      }
+
       await sql`
-        insert into extraction_cache (key, transcript_id, strategy, model, prediction, attempts, prompt_hash)
-        values (${key}, ${sample.transcriptId}, ${params.strategy}, ${params.model}, ${JSON.stringify(output)}::jsonb, ${JSON.stringify(
-          attempts
-        )}::jsonb, ${promptHash})
-        on conflict do nothing
+        update run_cases
+        set status='completed',
+            prediction=${JSON.stringify(output)}::jsonb,
+            scores=${JSON.stringify(scores)}::jsonb,
+            hallucinations=${JSON.stringify(halluc)}::jsonb,
+            schema_failed=${schemaFailed},
+            attempts=${JSON.stringify(attempts)}::jsonb,
+            wall_time_ms=${Date.now() - begun}
+        where run_id=${id} and transcript_id=${sample.transcriptId}
       `;
-    }
+      runEvents.emit(`run:${id}`, { transcriptId: sample.transcriptId, scores, done: false });
+      await sql`update runs set prompt_hash=${promptHash} where id=${id}`;
+    });
 
-    const scores = evaluateCase(output, sample.gold);
-    const halluc = findHallucinations(output, sample.transcript);
-    const schemaFailed = output === null;
-    hallucinations += halluc.length;
-    if (schemaFailed) schemaFailureCount++;
-    for (const a of attempts) {
-      usage.input_tokens += a.usage?.input_tokens ?? 0;
-      usage.output_tokens += a.usage?.output_tokens ?? 0;
-      usage.cache_read_input_tokens += a.usage?.cache_read_input_tokens ?? 0;
-      usage.cache_creation_input_tokens += a.usage?.cache_creation_input_tokens ?? 0;
+    const cases = await sql`select scores from run_cases where run_id=${id}`;
+    const agg: Record<string, number> = {};
+    for (const r of cases as any[]) {
+      const s = r.scores as Record<string, number>;
+      for (const [k, v] of Object.entries(s)) agg[k] = (agg[k] ?? 0) + v;
     }
-
+    for (const k of Object.keys(agg)) agg[k] = agg[k] / (cases.length || 1);
+    const durationMs = Date.now() - startedAt;
+    const costUsd = usage.input_tokens * 0.0000008 + usage.output_tokens * 0.000004 + usage.cache_creation_input_tokens * 0.0000008;
     await sql`
-      update run_cases
-      set status='completed',
-          prediction=${JSON.stringify(output)}::jsonb,
-          scores=${JSON.stringify(scores)}::jsonb,
-          hallucinations=${JSON.stringify(halluc)}::jsonb,
-          schema_failed=${schemaFailed},
-          attempts=${JSON.stringify(attempts)}::jsonb,
-          wall_time_ms=${Date.now() - begun}
-      where run_id=${id} and transcript_id=${sample.transcriptId}
-    `;
-    runEvents.emit(`run:${id}`, { transcriptId: sample.transcriptId, scores, done: false });
-    await sql`update runs set prompt_hash=${promptHash} where id=${id}`;
-  });
-
-  const cases = await sql`select scores from run_cases where run_id=${id}`;
-  const agg: Record<string, number> = {};
-  for (const r of cases as any[]) {
-    const s = r.scores as Record<string, number>;
-    for (const [k, v] of Object.entries(s)) agg[k] = (agg[k] ?? 0) + v;
-  }
-  for (const k of Object.keys(agg)) agg[k] = agg[k] / (cases.length || 1);
-  const durationMs = Date.now() - startedAt;
-  const costUsd = usage.input_tokens * 0.0000008 + usage.output_tokens * 0.000004 + usage.cache_creation_input_tokens * 0.0000008;
-  await sql`
     update runs
     set status='completed',
         aggregate=${JSON.stringify(agg)}::jsonb,
@@ -166,8 +167,19 @@ async function executeRun(id: string, params: { strategy: Strategy; model: strin
         updated_at=now()
     where id=${id}
   `;
-  runEvents.emit(`run:${id}`, { done: true });
-  await sql.end();
+    runEvents.emit(`run:${id}`, { done: true });
+  } catch (e) {
+    const message = e instanceof Error ? e.message : String(e);
+    await sql`
+      update runs
+      set status='failed', aggregate=${JSON.stringify({ error: message })}::jsonb, updated_at=now()
+      where id=${id}
+    `;
+    runEvents.emit(`run:${id}`, { done: true, error: message });
+    console.error(`run ${id} failed:`, e);
+  } finally {
+    await sql.end();
+  }
 }
 
 export async function listRuns() {
